@@ -33,6 +33,11 @@ def echo():
         if  indexChunked < endOfTEHeader and indexChunked > -1 :
             # value is chunked, remove the header, replace it with content-length header, https://www.ietf.org/rfc/rfc2616.txt Section 4.4
             rawResponseChecked = rawResponse[:indexTEHeader] + "Content-Length: " + str(contentLength) +  rawResponse[endOfTEHeader:]
+        else:
+            # value is other than chunked, no changes for now
+            rawResponseChecked = rawResponse
+    else:
+        rawResponseChecked = rawResponse
     
 
     rawResponseEnc = rawResponseChecked.encode()
