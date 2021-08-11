@@ -18,8 +18,24 @@ def echo():
     with open("response.txt") as f:
         rawResponse = f.read()
 
+    # Get content length of raw data, it may be different than the header value due to copy-paste of response
+    httpResponseParts = rawResponse.split("\n\n", 1)
+    contentLength = len(httpResponseParts[1])
 
-    rawResponseEnc = rawResponse.encode()
+    # Transfer-Encoding breaks the parse if the response is already assembled. So, if the header is present, remove it
+    indexTEHeader = rawResponse.find("Transfer-Encoding")
+    endOfTEHeader = rawResponse.find("\n", indexTEHeader)
+  
+    rawResponseChecked = ""
+    if indexTEHeader > -1:
+        # Transfer Encoding Header found
+        indexChunked = rawResponse.find("chunked", indexTEHeader)
+        if  indexChunked < endOfTEHeader and indexChunked > -1 :
+            # value is chunked, remove the header, replace it with content-length header, https://www.ietf.org/rfc/rfc2616.txt Section 4.4
+            rawResponseChecked = rawResponse[:indexTEHeader] + "Content-Length: " + str(contentLength) +  rawResponse[endOfTEHeader:]
+    
+
+    rawResponseEnc = rawResponseChecked.encode()
     class FakeSocket():
         def __init__(self, response_bytes):
             self._file = BytesIO(response_bytes)
