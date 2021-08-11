@@ -18,9 +18,18 @@ def echo():
     with open("response.txt") as f:
         rawResponse = f.read()
 
-    # Get content length of raw data, it may be different than the header value due to copy-paste of response
+    # Get content length of raw data, it may be different than the header value due to copy-paste of the response
     httpResponseParts = rawResponse.split("\n\n", 1)
     contentLength = len(httpResponseParts[1])
+
+    indexContentLengthHeader = rawResponse.find("Content-Length:")
+    if indexContentLengthHeader > -1:
+        endContentLengthHeader = rawResponse.find("\n", indexContentLengthHeader)
+        parsedContentLength = int(rawResponse[indexContentLengthHeader + 15:endContentLengthHeader])
+
+        if contentLength != parsedContentLength:
+            rawResponse = rawResponse[:indexContentLengthHeader] + "Content-Length: " + str(contentLength) + rawResponse[endContentLengthHeader:] 
+       
 
     # Transfer-Encoding breaks the parse if the response is already assembled. So, if the header is present, remove it
     indexTEHeader = rawResponse.find("Transfer-Encoding")
