@@ -64,7 +64,6 @@ body{
     });
 </script>
 <h1></h1>
-
 <div class="container">
     <form method="POST">
         <label style="font-size:150%; color:antiquewhite" >Kodoma - Response It ! </label>
