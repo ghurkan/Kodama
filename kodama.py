@@ -88,7 +88,6 @@ def echo():
     parsedResponse_status = parsedResponse.status
     parsedResponse.close()
     response = make_response(parsedResponse_body)
-    response.set_cookie("mycookie", value="htegergergegf",secure=True,httponly=True)
     response.status_code = parsedResponse_status
     for header in parsedResponse_headers:
         print(header[0] + " " + header[1])
