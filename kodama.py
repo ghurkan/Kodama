@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 # set the project root directory as the static folder, you can set others.
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='/')
 
 # set the root path for save uploaded static files
 UPLOAD_FOLDER = app.root_path +'\\static'
