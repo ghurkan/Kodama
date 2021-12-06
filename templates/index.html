@@ -5,26 +5,29 @@
 <script type=text/javascript>
     $(function() {
         $('#submit').bind('click', function() {
+            if($("#content").val() == ""){
+            alert("Response cannot be empty!");
+            return false;
+            }
+
             $.ajax( {
                 url: '/',
                 type: 'POST',
                 data: {
-                    content: $('#content').val(),
-                    file: $('#file').val()
+                    content: $('#content').val()
                 },
-                dataType: "json",
-                encode: false,
+                encode: false
             }).done(function (data) {
-                console.log("oldu");
-            
-            }).fail(function (data) {
                 $("#content").hide()
                 $("#submit").hide()
                 $("#successText").show()
                 $('#successText').css('visibility', 'visible');
                 $("#redirectResult").show()
                 $('#redirectResult').css('visibility', 'visible');
-             });
+            }).fail(function (data, textStatus, jqXHR) {
+                alert('error!');
+                console.log(textStatus);
+            });
             event.preventDefault();
         });
     });
@@ -32,6 +35,12 @@
     $('#upload-file-btn').click(function() {
         event.preventDefault();
         var form_data = new FormData($('#upload-file')[0]);
+
+        if($("#file").val() == ""){
+            alert("Please select a file!");
+            return false;
+        }
+
         $.ajax({
             type: 'POST',
             url: '/',
@@ -39,13 +48,13 @@
             cache: false,
             contentType: false,
             processData: false,
-            dataType: 'json'
         }).done(function(data, textStatus, jqXHR){
-            alert('error!');
-        }).fail(function(data){
-            $("#uploadDiv").hide()
+            $("#uploadDiv").hide();
             $('#uploadSuccess').show();
             $('#uploadSuccess').css('visibility', 'visible');
+        }).fail(function(data, textStatus, jqXHR){
+            alert('error!');
+            console.log(textStatus);
         });
     });
 }); 
@@ -64,23 +73,17 @@
     <br><br>
     <form enctype="multipart/form-data" id="upload-file" method="POST">
         <div id="uploadDiv" class="input-group">
-            <div class="input-group-prepend">
-                <button class="input-group-text" id="upload-file-btn">Upload</button>
-            </div>
             <div  class="custom-file">
-                <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="inputGroupFileAddon01">
+                <input type="file" class="custom-file-input" onchange="$('#upload-file-btn').show();" id="file" name="file" aria-describedby="inputGroupFileAddon01">
                 <label class="custom-file-label" for="file">You can upload static files from below.</label>
+            </div>
+            <div class="input-group-append">
+                <button class="input-group-text" style="display:none;" id="upload-file-btn">Upload</button>
             </div>
         </div>
         <div style="display:none;" id="uploadSuccess" class="alert alert-success">Your file has been added.<br></div>
     </form>
 </div>
-<script type="text/javascript" src="https://mdbootstrap.com/api/snippets/static/download/MDB-Pro_4.20.0/js/jquery.min.js"></script>
-<script type="text/javascript" src="https://mdbootstrap.com/api/snippets/static/download/MDB-Pro_4.20.0/js/popper.min.js"></script>
-<script type="text/javascript" src="https://mdbootstrap.com/api/snippets/static/download/MDB-Pro_4.20.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://mdbootstrap.com/api/snippets/static/download/MDB-Pro_4.20.0/js/mdb.min.js"></script>
-<script type="text/javascript" src="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/js/bundles/4.20.0/compiled-addons.min.js"></script>
-<script type="text/javascript" src="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/js/plugins/mdb-plugins-gathered.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
 {% endblock %}
 

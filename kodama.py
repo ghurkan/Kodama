@@ -37,7 +37,6 @@ def index():
         elif "file" in request.files:
             file = request.files['file']
             if file.filename == '':
-                flash('No selected file')
                 return redirect(request.url)
             if file and allowed_file(file.filename):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
